@@ -102,29 +102,53 @@ object Kata {
         ("eighty" -> 80),
         ("ninety" -> 90))
 
-    def wordsToNumber(w: String): Int = {
+    private val SEP_SPACE = " "
+    private val SEP_AND = " and "
+        
+    // e.g.
+    // "eight hundred" => "eight"
+    // "seventy three thousand" => "seventy three"
+    private def dropQualifier(s: String) = s.split(SEP_SPACE).init.mkString(SEP_SPACE)
 
-        val andChunks = w.split(" and ")
+    def wordsToNumber(s: String): Int = {
 
-        if (andChunks.length == 1) {
-            val ws = w.split(" ")
-            if (ws.length > 1) {
-                val v1 = stringToTens(ws(0))
-                val v2 = stringToUnits(ws(1))
-                return v1 + v2
-            }
-            def tryTens() = stringToTens(w)
-            def tryFirstDecade() = stringToFirstDecade.getOrElse(w, tryTens())
-            return stringToUnits.getOrElse(w, tryFirstDecade())
+        if (s.length == 0) {
+            return 0
         }
 
-        if (andChunks.length == 2) {
-            val chunk0 = andChunks(0)
-            val chunk1 = andChunks(1)
-            val w2 = chunk0.split(" ").init.mkString(" ") // assume "hundred"'s for now
-            val v1 = wordsToNumber(w2) * 100
-            val v2 = wordsToNumber(chunk1)
-            return v1 + v2
+        val andChunks = s.split(SEP_AND)
+        val firstAndChunk = andChunks(0)
+        val remainderString = andChunks.tail.mkString(SEP_AND)
+        val remainderValue = wordsToNumber(remainderString) 
+
+        if (firstAndChunk.contains("million")) {
+            val s = dropQualifier(firstAndChunk)
+            val v = wordsToNumber(s) * 1000000
+            return v + remainderValue
+        }
+
+        if (firstAndChunk.contains("thousand")) {
+            val s = dropQualifier(firstAndChunk)
+            val v = wordsToNumber(s) * 1000
+            return v + remainderValue
+        }
+
+        if (firstAndChunk.contains("hundred")) {
+            val s = dropQualifier(firstAndChunk)
+            val v = wordsToNumber(s) * 100
+            return v + remainderValue
+        }
+
+        val ws = s.split(SEP_SPACE)
+
+        if (ws.length == 2) {
+            val tensValue = stringToTens(ws(0))
+            val unitsValue = stringToUnits(ws(1))
+            return tensValue + unitsValue
+        }
+
+        if (ws.length == 1) {
+            return stringToUnits.getOrElse(s, stringToFirstDecade.getOrElse(s, stringToTens(s)))
         }
 
         ???

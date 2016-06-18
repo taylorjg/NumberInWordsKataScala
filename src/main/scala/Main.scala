@@ -43,7 +43,8 @@ object Main {
             "thirty four",
             "ninety seven",
             "one hundred and seventy six",
-            "eight hundred and twenty two")
+            "eight hundred and twenty two",
+            "two hundred")
 
         for (ws <- wss) {
             println(s"'$ws': ${wordsToNumber(ws)}")
