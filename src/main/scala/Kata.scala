@@ -104,34 +104,29 @@ object Kata {
 
     def wordsToNumber(w: String): Int = {
 
-        val ws = w.split(" ")
+        val andChunks = w.split(" and ")
 
-        if (ws.length > 1) {
-            val v1 = stringToTens(ws(0))
-            val v2 = stringToUnits(ws(1))
+        if (andChunks.length == 1) {
+            val ws = w.split(" ")
+            if (ws.length > 1) {
+                val v1 = stringToTens(ws(0))
+                val v2 = stringToUnits(ws(1))
+                return v1 + v2
+            }
+            def tryTens() = stringToTens(w)
+            def tryFirstDecade() = stringToFirstDecade.getOrElse(w, tryTens())
+            return stringToUnits.getOrElse(w, tryFirstDecade())
+        }
+
+        if (andChunks.length == 2) {
+            val chunk0 = andChunks(0)
+            val chunk1 = andChunks(1)
+            val w2 = chunk0.split(" ").init.mkString(" ") // assume "hundred"'s for now
+            val v1 = wordsToNumber(w2) * 100
+            val v2 = wordsToNumber(chunk1)
             return v1 + v2
         }
 
-        def tryTens() = stringToTens(w)
-        def tryFirstDecade() = stringToFirstDecade.getOrElse(w, tryTens())
-        stringToUnits.getOrElse(w, tryFirstDecade())
-
-        // split on " and "
-        // e.g. "eight hundred and twenty two" => ["eight hundred", "twenty two"]
-
-        // "eight hundred" => 800
-        // "twenty two" => 22
-        // sum (aggregate) 800 + 22 = 822
-
-        // split on " "
-        // e.g. "eight hundred" => ["eight", "hundred"]
-        // e.g. "" => ["twenty", "two"]
-
-        // look for "hundred" or "thousand" or "million"
-        // if "hundred" found then (similar for "thousand" and "million"):
-        //   parse the parts before "hundred" => "eight" => 8 (recursive ?)
-        //   multiply by 100 => 8 * 100 => 800
-        //   parse the rest => "twenty two" => 22 (recursive ?)
-        //   add the bits => 800 + 22 => 822
+        ???
     } 
 }
