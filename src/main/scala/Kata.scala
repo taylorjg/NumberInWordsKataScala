@@ -1,7 +1,6 @@
 object Kata {
 
     private val unitsToString = Map(
-        (0 -> "zero"),
         (1 -> "one"),
         (2 -> "two"),
         (3 -> "three"),
@@ -25,7 +24,6 @@ object Kata {
         (19 -> "nineteen"))
 
     private val tensToString = Map(
-        (10 -> "ten"),
         (20 -> "twenty"),
         (30 -> "thirty"),
         (40 -> "forty"),
@@ -71,7 +69,69 @@ object Kata {
         } 
     }
 
-    def wordsToNumber(ws: String): Int = {
-        1
+    private val stringToUnits = Map(
+        ("one" -> 1),
+        ("two" -> 2),
+        ("three" -> 3),
+        ("four" -> 4),
+        ("five" -> 5),
+        ("six" -> 6),
+        ("seven" -> 7),
+        ("eight" -> 8),
+        ("nine" -> 9))
+
+    private val stringToFirstDecade = Map(
+        ("ten" -> 10),
+        ("eleven" -> 11),
+        ("twelve" -> 12),
+        ("thirteen" -> 13),
+        ("fourteen" -> 14),
+        ("fifteen" -> 15),
+        ("sixteen" -> 16),
+        ("seventeen" -> 17),
+        ("eighteen" -> 18),
+        ("nineteen" -> 19))
+
+    private val stringToTens = Map(
+        ("twenty" -> 20),
+        ("thirty" -> 30),
+        ("forty" -> 40),
+        ("fifty" -> 50),
+        ("sixty" -> 60),
+        ("seventy" -> 70),
+        ("eighty" -> 80),
+        ("ninety" -> 90))
+
+    def wordsToNumber(w: String): Int = {
+
+        val ws = w.split(" ")
+
+        if (ws.length > 1) {
+            val v1 = stringToTens(ws(0))
+            val v2 = stringToUnits(ws(1))
+            return v1 + v2
+        }
+
+        def tryTens() = stringToTens(w)
+        def tryFirstDecade() = stringToFirstDecade.getOrElse(w, tryTens())
+        stringToUnits.getOrElse(w, tryFirstDecade())
+
+        // split on " and "
+        // e.g. "eight hundred and twenty two" => ["eight hundred", "twenty two"]
+
+        // "eight hundred" => 800
+        // "twenty two" => 22
+        // sum (aggregate) 800 + 22 = 822
+
+        // split on " "
+        // e.g. "eight hundred" => ["eight", "hundred"]
+        // e.g. "" => ["twenty", "two"]
+
+        // look for "hundred" or "thousand" or "million"
+        // if "hundred" found then (similar for "thousand" and "million"):
+        //   parse the parts before "hundred" => "eight" => 8 (recursive ?)
+        //   multiply by 100 => 8 * 100 => 800
+        //   parse the rest => "twenty two" => 22 (recursive ?)
+        //   add the bits => 800 + 22 => 822
     } 
 }

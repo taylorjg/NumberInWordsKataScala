@@ -15,7 +15,36 @@ object Main {
             List(1000045)
 
         for (n <- ns) {
-            println(s"$n: ${numberToWords(n)}")
+            println(s"$n: '${numberToWords(n)}'")
+        }
+
+        val wss = List(
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+            "ten",
+            "eleven",
+            "twelve",
+            "thirteen",
+            "fourteen",
+            "fifteen",
+            "sixteen",
+            "seventeen",
+            "eighteen",
+            "nineteen",
+            "twenty",
+            "twenty one",
+            "thirty four",
+            "ninety seven")
+
+        for (ws <- wss) {
+            println(s"'$ws': ${wordsToNumber(ws)}")
         }
     }
 }
