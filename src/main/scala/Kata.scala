@@ -1,5 +1,8 @@
 object Kata {
 
+    private val SEP_SPACE = " "
+    private val SEP_AND = " and "
+
     private val unitsToString = Map(
         (1 -> "one"),
         (2 -> "two"),
@@ -35,12 +38,11 @@ object Kata {
 
     def numberToWords(n: Int): String = {
 
-        def helper(d: Int, s: String): String = {
-            val sep = " and "
-            val n2 = n / d
-            val r = n - (n2 * d)
-            val p1 = numberToWords(n2) + " " + s
-            val p2 = if (r > 0) sep + numberToWords(r) else "" 
+        def helper(divisor: Int, qualifier: String): String = {
+            val n2 = n / divisor
+            val remainder = n - (n2 * divisor)
+            val p1 = numberToWords(n2) + SEP_SPACE + qualifier
+            val p2 = if (remainder > 0) SEP_AND + numberToWords(remainder) else "" 
             return s"$p1$p2" 
         }
 
@@ -49,11 +51,10 @@ object Kata {
         def handleFirstDecade = firstDecadeToString(n) 
 
         def handleFirstHundred = {
-            val sep = " "
             val units = n % 10
             val tens = n - units
             val p1 = tensToString(tens) 
-            val p2 = if (units > 0) sep + unitsToString(units) else ""
+            val p2 = if (units > 0) SEP_SPACE + unitsToString(units) else ""
             s"$p1$p2"
         }
 
@@ -102,8 +103,6 @@ object Kata {
         ("eighty" -> 80),
         ("ninety" -> 90))
 
-    private val SEP_SPACE = " "
-    private val SEP_AND = " and "
     private def dropQualifier(s: String) = s.split(SEP_SPACE).init.mkString(SEP_SPACE)
 
     def wordsToNumber(s: String): Int = {
