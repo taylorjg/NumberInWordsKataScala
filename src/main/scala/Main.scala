@@ -11,7 +11,8 @@ object Main {
             List(822) ++
             List(1327) ++
             List(12345) ++
-            List(1012345)
+            List(1012345) ++
+            List(1000045)
 
         for (n <- ns) {
             println(s"$n: ${numberToWords(n)}")
