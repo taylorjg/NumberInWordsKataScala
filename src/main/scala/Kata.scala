@@ -104,40 +104,29 @@ object Kata {
 
     private val SEP_SPACE = " "
     private val SEP_AND = " and "
-        
-    // e.g.
-    // "eight hundred" => "eight"
-    // "seventy three thousand" => "seventy three"
     private def dropQualifier(s: String) = s.split(SEP_SPACE).init.mkString(SEP_SPACE)
 
     def wordsToNumber(s: String): Int = {
 
-        if (s.length == 0) {
-            return 0
-        }
+        if (s.length == 0) return 0
 
         val andChunks = s.split(SEP_AND)
         val firstAndChunk = andChunks(0)
         val remainderString = andChunks.tail.mkString(SEP_AND)
         val remainderValue = wordsToNumber(remainderString) 
 
-        if (firstAndChunk.contains("million")) {
-            val s = dropQualifier(firstAndChunk)
-            val v = wordsToNumber(s) * 1000000
-            return v + remainderValue
-        }
+        val ts = List(
+            ("million", 1000000),
+            ("thousand", 1000),
+            ("hundred", 100))
 
-        if (firstAndChunk.contains("thousand")) {
-            val s = dropQualifier(firstAndChunk)
-            val v = wordsToNumber(s) * 1000
-            return v + remainderValue
-        }
-
-        if (firstAndChunk.contains("hundred")) {
-            val s = dropQualifier(firstAndChunk)
-            val v = wordsToNumber(s) * 100
-            return v + remainderValue
-        }
+        for (t <- ts) {
+            if (firstAndChunk.endsWith(t._1)) {
+                val stringWithoutQualifier = dropQualifier(firstAndChunk)
+                val value = wordsToNumber(stringWithoutQualifier) * t._2
+                return value + remainderValue
+            }
+        } 
 
         val ws = s.split(SEP_SPACE)
 
@@ -148,9 +137,12 @@ object Kata {
         }
 
         if (ws.length == 1) {
-            return stringToUnits.getOrElse(s, stringToFirstDecade.getOrElse(s, stringToTens(s)))
+            val value = stringToTens.getOrElse(s,
+                stringToFirstDecade.getOrElse(s,
+                    stringToUnits.getOrElse(s, 0)))
+            if (value > 0) return value
         }
 
-        ???
+        throw new IllegalArgumentException
     } 
 }
