@@ -37,7 +37,7 @@ object Kata {
 
     def numberToWords(n: Int): String = {
 
-        if (n < 1 || n > 999) {
+        if (n < 1) {
             throw new IllegalArgumentException
         }
 
@@ -57,11 +57,23 @@ object Kata {
             return s"$part1 $part2" 
         }
 
-        val hundreds = n / 100
-        val remainder = n - (hundreds * 100)
-        val part1 = unitsToString(hundreds) + " hundred"
-        val part2 = if (remainder > 0) "and " + numberToWords(remainder) else "" 
-        return s"$part1 $part2" 
+        if (n < 1000) {
+            val hundreds = n / 100
+            val remainder = n - (hundreds * 100)
+            val part1 = unitsToString(hundreds) + " hundred"
+            val part2 = if (remainder > 0) " and " + numberToWords(remainder) else "" 
+            return s"$part1$part2" 
+        }
+
+        if (n < 10000) {
+            val thousands = n / 1000
+            val remainder = n - (thousands * 1000)
+            val part1 = unitsToString(thousands) + " thousand"
+            val part2 = if (remainder > 0) " and " + numberToWords(remainder) else "" 
+            return s"$part1$part2" 
+        }
+
+        throw new IllegalArgumentException
     }
 
     def wordsToNumber(ws: String): Int = {
