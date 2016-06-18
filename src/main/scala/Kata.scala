@@ -1,7 +1,7 @@
 object Kata {
 
-    val unitsToString = Map(
-        (0 -> ""),
+    private val unitsToString = Map(
+        (0 -> "zero"),
         (1 -> "one"),
         (2 -> "two"),
         (3 -> "three"),
@@ -12,7 +12,7 @@ object Kata {
         (8 -> "eight"),
         (9 -> "nine"))
 
-    val firstDecadeToString = Map(
+    private val firstDecadeToString = Map(
         (10 -> "ten"),
         (11 -> "eleven"),
         (12 -> "twelve"),
@@ -24,7 +24,7 @@ object Kata {
         (18 -> "eighteen"),
         (19 -> "nineteen"))
 
-    val tensToString = Map(
+    private val tensToString = Map(
         (10 -> "ten"),
         (20 -> "twenty"),
         (30 -> "thirty"),
@@ -37,43 +37,38 @@ object Kata {
 
     def numberToWords(n: Int): String = {
 
-        if (n < 1) {
-            throw new IllegalArgumentException
+        def helper(d: Int, s: String): String = {
+            val sep = " and "
+            val n2 = n / d
+            val r = n - (n2 * d)
+            val p1 = numberToWords(n2) + " " + s
+            val p2 = if (r > 0) sep + numberToWords(r) else "" 
+            return s"$p1$p2" 
         }
 
-        if (n < 10) {
-            return unitsToString(n) 
-        }
+        def handleUnits = unitsToString(n) 
 
-        if (n < 20) {
-            return firstDecadeToString(n) 
-        }
+        def handleFirstDecade = firstDecadeToString(n) 
 
-        if (n < 100) {
+        def handleFirstHundred = {
+            val sep = " "
             val units = n % 10
             val tens = n - units
-            val part1 = tensToString(tens) 
-            val part2 = unitsToString(units)
-            return s"$part1 $part2" 
+            val p1 = tensToString(tens) 
+            val p2 = if (units > 0) sep + unitsToString(units) else ""
+            s"$p1$p2"
         }
 
-        if (n < 1000) {
-            val hundreds = n / 100
-            val remainder = n - (hundreds * 100)
-            val part1 = unitsToString(hundreds) + " hundred"
-            val part2 = if (remainder > 0) " and " + numberToWords(remainder) else "" 
-            return s"$part1$part2" 
-        }
-
-        if (n < 10000) {
-            val thousands = n / 1000
-            val remainder = n - (thousands * 1000)
-            val part1 = unitsToString(thousands) + " thousand"
-            val part2 = if (remainder > 0) " and " + numberToWords(remainder) else "" 
-            return s"$part1$part2" 
-        }
-
-        throw new IllegalArgumentException
+        n match {
+            case n if n < 1 => throw new IllegalArgumentException
+            case n if n < 10 => handleUnits
+            case n if n < 20 => handleFirstDecade   
+            case n if n < 100 => handleFirstHundred
+            case n if n < 1000 => helper(100, "hundred")   
+            case n if n < 1000000 => helper(1000, "thousand")   
+            case n if n < 1000000000 => helper(1000000, "million")
+            case _ => throw new IllegalArgumentException   
+        } 
     }
 
     def wordsToNumber(ws: String): Int = {
