@@ -2,10 +2,9 @@ import Kata._
 
 object Main {
     def main(args: Array[String]) {
-        val n1 = 822
-        val ws = numberToWords(n1)
-        val n2 = wordsToNumber(ws)
-        println(s"numberToWords($n1): $ws")
-        println(s"wordsToNumber($ws): $n2")
+        val ns = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10) ++ (11 to 20) ++ (21 to 40) ++ (94 to 127) ++ List(822)
+        for (n <- ns) {
+            println(s"$n: ${numberToWords(n)}")
+        }
     }
 }
