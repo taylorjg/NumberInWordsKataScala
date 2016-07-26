@@ -42,18 +42,18 @@ object Kata {
             val n2 = n / divisor
             val remainder = n - (n2 * divisor)
             val p1 = numberToWords(n2) + SEP_SPACE + qualifier
-            val p2 = if (remainder > 0) SEP_AND + numberToWords(remainder) else "" 
+            val p2 = if (remainder > 0) SEP_AND + numberToWords(remainder) else ""
             s"$p1$p2"
         }
 
-        def handleUnits = unitsToString(n) 
+        def handleUnits = unitsToString(n)
 
-        def handleFirstDecade = firstDecadeToString(n) 
+        def handleFirstDecade = firstDecadeToString(n)
 
         def handleFirstHundred = {
             val units = n % 10
             val tens = n - units
-            val p1 = tensToString(tens) 
+            val p1 = tensToString(tens)
             val p2 = if (units > 0) SEP_SPACE + unitsToString(units) else ""
             s"$p1$p2"
         }
@@ -66,8 +66,8 @@ object Kata {
             case `n` if n < 1000 => helper(100, "hundred")
             case `n` if n < 1000000 => helper(1000, "thousand")
             case `n` if n < 1000000000 => helper(1000000, "million")
-            case _ => throw new IllegalArgumentException   
-        } 
+            case _ => throw new IllegalArgumentException
+        }
     }
 
     private val stringToUnits = Map(
@@ -112,7 +112,7 @@ object Kata {
         val andChunks = s.split(SEP_AND)
         val firstAndChunk = andChunks(0)
         val remainderString = andChunks.tail.mkString(SEP_AND)
-        val remainderValue = wordsToNumber(remainderString) 
+        val remainderValue = wordsToNumber(remainderString)
 
         val ts = List(
             ("million", 1000000),
@@ -125,7 +125,7 @@ object Kata {
                 val value = wordsToNumber(stringWithoutQualifier) * t._2
                 return value + remainderValue
             }
-        } 
+        }
 
         val ws = s.split(SEP_SPACE)
 
@@ -143,5 +143,5 @@ object Kata {
         }
 
         throw new IllegalArgumentException
-    } 
+    }
 }
